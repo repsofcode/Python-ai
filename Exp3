@@ -1,0 +1,60 @@
+class Node:
+    def __init__(self, name, heuristic, node_type, children=None):
+        self.name = name
+        self.heuristic = heuristic
+        self.node_type = node_type  # 'AND' or 'OR'
+        self.children = children or []
+        self.parent = None
+        self.solution = False
+        self.cost = float('inf')  # Initialize cost to infinity
+
+def ao_star(start):
+    open_nodes = [start]
+    while open_nodes:
+        node = open_nodes.pop(0)
+        # If it's not OR node, find the child with the minimum expected cost
+        if node.node_type == 'OR':
+            min_cost = float('inf')
+            min_child = None
+            for child in node.children:
+                child_cost = child.heuristic
+                if child_cost < min_cost:
+                    min_cost = child_cost
+                    min_child = child
+            node.cost = min_cost
+            node.solution = [min_child]
+        elif node.node_type == 'AND':
+            cost = 0
+            for child in node.children:
+                cost += child.heuristic
+            node.cost = cost
+            node.solution = node.children
+        # Add non-terminal children of the current node to open_nodes
+        for child in node.children:
+            if not child.solution:
+                open_nodes.append(child)
+    # Construct solution path
+    solution_path = []
+    current_node = start
+    while current_node:
+        solution_path.append(current_node.name)
+        if current_node.node_type == 'OR':
+            current_node = current_node.solution[0] if current_node.solution else None
+        elif current_node.node_type == 'AND':
+            break  # For AND nodes, we don't traverse further
+    return start.cost, solution_path
+
+# Example usage:
+nodes = {
+    'A': Node('A', 0, 'OR'),
+    'B': Node('B', 3, 'AND'),
+    'C': Node('C', 2, 'OR'),
+    'D': Node('D', 4, 'AND'),
+    'E': Node('E', 1, 'OR')  # Terminal node
+}
+nodes['A'].children = [nodes['B'], nodes['C']]
+nodes['B'].children = [nodes['D'], nodes['E']]
+# Running the AO* algorithm
+cost, path = ao_star(nodes['A'])
+print("AO* Solution path from A:", path)
+print("Cost:", cost)
