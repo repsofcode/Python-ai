@@ -1,0 +1,32 @@
+
+rogram 3 max temp
+
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    line = line.strip()
+    year = line[0:4]
+    temp = line[4:6]
+    print(f"{year}\t{temp}")
+
+
+
+reducer.py
+                           
+#!/usr/bin/env python3
+import sys
+
+max_temp = -999
+hot_year = None
+
+for line in sys.stdin:
+    year, temp = line.strip().split("\t")
+    temp = int(temp)
+
+    if temp > max_temp:
+        max_temp = temp
+        hot_year = year
+
+print(f"{hot_year}\t{max_temp}")
+
