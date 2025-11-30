@@ -1,0 +1,30 @@
+mapper
+
+import sys
+
+for line in sys.stdin:
+    words = line.strip().lower().split()
+    for w in words:
+        print(f"{w}\t1")
+        reducer
+        
+import sys
+
+current_word = None
+current_count = 0
+
+for line in sys.stdin:
+    word, count = line.strip().split('\t')
+    count = int(count)
+
+    if word != current_word:
+        if current_word is not None:
+            print(f"{current_word}\t{current_count}")
+        current_word = word
+        current_count = 0
+
+    current_count += count
+
+
+if current_word is not None:
+    print(f"{current_word}\t{current_count}")
