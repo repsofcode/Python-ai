@@ -1,27 +1,27 @@
 mapper.py
-#!/usr/bin/env python3
+
 import sys
 
 for line in sys.stdin:
-    line = line.strip()
-    year = line[0:4]
-    temp = line[4:6]
-    print(f"{year}\t{temp}")
+    parts = line.strip().split(',')
+    year = parts[0]
+    values = list(map(int, parts[1:]))
+    avg = sum(values) // len(values)
+    print(f"{year}\t{avg}")
 
 reducer.py
 
-#!/usr/bin/env python3
 import sys
 
-max_usage = -999999
 max_year = None
+max_avg = -1
 
 for line in sys.stdin:
-    year, avg = line.strip().split("\t")
-    avg = float(avg)
+    year, avg = line.strip().split('\t')
+    avg = int(avg)
 
-    if avg > max_usage:
-        max_usage = avg
+    if avg > max_avg:
+        max_avg = avg
         max_year = year
 
-print(f"{max_year}\t{max_usage}")
+print(max_year, max_avg)
