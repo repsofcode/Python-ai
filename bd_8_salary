@@ -1,0 +1,41 @@
+mapper
+import sys
+
+for line in sys.stdin:
+    parts = line.strip().split()
+    if len(parts) < 3:
+        continue
+
+    # last field = salary
+    try:
+        salary = float(parts[-1])
+    except ValueError:
+        continue
+
+    # single key, so everything is aggregated together
+    print(f"all\t{salary}")
+
+    reducer
+    import sys
+
+total_salary = 0.0
+employee_count = 0
+
+for line in sys.stdin:
+    parts = line.strip().split("\t")
+    if len(parts) != 2:
+        continue
+
+    try:
+        salary = float(parts[1])
+    except ValueError:
+        continue
+
+    total_salary += salary
+    employee_count += 1
+
+if employee_count > 0:
+    average_salary = total_salary / employee_count
+    print(f"Average Salary: {average_salary}")
+    print(f"Total Salary: {total_salary}")
+    
