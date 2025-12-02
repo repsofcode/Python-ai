@@ -1,0 +1,29 @@
+mappper
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    print(line.strip())
+
+reducer
+#!/usr/bin/env python3
+import sys
+import math
+
+for line in sys.stdin:
+    try:
+        n = int(line.strip())
+    except:
+        continue
+
+    if n < 2:
+        continue
+
+    prime = True
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            prime = False
+            break
+
+    if prime:
+        print(n)
