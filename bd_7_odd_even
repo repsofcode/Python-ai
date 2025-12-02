@@ -1,0 +1,23 @@
+mappper
+
+import sys
+
+for line in sys.stdin:
+    print(line.strip())
+
+
+
+reducer
+
+import sys
+
+for line in sys.stdin:
+    try:
+        n = int(line.strip())
+    except:
+        continue
+
+    if n % 2 == 0:
+        print(f"even\t{n}")
+    else:
+        print(f"odd\t{n}")
