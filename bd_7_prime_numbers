@@ -2,8 +2,8 @@ mappper
 #!/usr/bin/env python3
 import sys
 
-for line in sys.stdin:
-    print(line.strip())
+for n in range(1, 1000):
+    print(n)
 
 reducer
 #!/usr/bin/env python3
