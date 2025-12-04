@@ -1,0 +1,49 @@
+mapper
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    parts = line.strip().split(",")
+    if len(parts) == 2:
+        print(line.strip())
+
+
+reducer
+#!/usr/bin/env python3
+import sys
+
+current = None
+total = 0
+count = 0
+
+max_avg = -1
+best_student = None
+
+for line in sys.stdin:
+    student, mark = line.strip().split(",")
+    mark = int(mark)
+
+    if current is None:
+        current = student
+
+    if student != current:
+        avg = total / count
+        if avg > max_avg:
+            max_avg = avg
+            best_student = current
+
+        current = student
+        total = 0
+        count = 0
+
+    total += mark
+    count += 1
+
+# last student
+if current:
+    avg = total / count
+    if avg > max_avg:
+        max_avg = avg
+        best_student = current
+
+print(best_student, max_avg)
