@@ -1,0 +1,43 @@
+def negate(lit):
+    return lit[1:] if lit.startswith('~') else '~' + lit
+
+def resolve(ci, cj):
+    resolvents = []
+    for li in ci:
+        for lj in cj:
+            if li == negate(lj):
+                new_clause = (ci - {li}) | (cj - {lj})
+                resolvents.append(frozenset(new_clause))
+    return resolvents
+
+def resolution(clauses):
+    clauses = set(clauses)
+    while True:
+        new = set()
+        pairs = [(ci, cj) for ci in clauses for cj in clauses if ci != cj]
+
+        for (ci, cj) in pairs:
+            resolvents = resolve(ci, cj)
+            if frozenset() in resolvents:
+                return True   # UNSATISFIABLE
+            new |= set(resolvents)
+
+        if new.issubset(clauses):
+            return False      # SATISFIABLE
+
+        clauses |= new
+
+
+# Example input
+clauses = {
+    frozenset({'P', '~Q'}),
+    frozenset({'~P'}),
+    frozenset({'Q'})
+}
+
+result = resolution(clauses)
+
+if result:
+    print("The set of clauses is unsatisfiable.")
+else:
+    print("The set of clauses is satisfiable.")
