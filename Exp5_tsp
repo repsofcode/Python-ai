@@ -1,0 +1,39 @@
+import numpy as np
+
+def nearest_neighbor(dist, start=0):
+    n = len(dist)
+    visited = set([start])
+    tour = [start]
+    total_cost = 0
+    current = start
+
+    while len(visited) < n:
+        next_city = None
+        best_dist = float('inf')
+
+        for j in range(n):
+            if j not in visited and dist[current][j] < best_dist:
+                best_dist = dist[current][j]
+                next_city = j
+
+        visited.add(next_city)
+        tour.append(next_city)
+        total_cost += best_dist
+        current = next_city
+
+    total_cost += dist[current][start]   # return to start
+    return tour, total_cost
+
+
+def create_distance_matrix(n):
+    pts = np.random.rand(n, 2)
+    dist = np.sqrt(((pts[:, None] - pts[None, :]) ** 2).sum(axis=2))
+    return dist
+
+
+# run
+n = 5
+dist = create_distance_matrix(n)
+tour, cost = nearest_neighbor(dist)
+print("Tour:", tour)
+print("Total cost:", cost)
