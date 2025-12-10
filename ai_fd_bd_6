@@ -1,0 +1,63 @@
+# -------------------------------------------
+# FORWARD CHAINING
+# -------------------------------------------
+
+def forward_chaining(facts, rules):
+    print("Initial Facts:", facts)
+    changed = True
+
+    while changed:
+        changed = False
+        for cond, res in rules:
+            if cond.issubset(facts) and res not in facts:
+                facts.add(res)
+                print("Inferred:", res)
+                changed = True
+
+    print("Final Facts:", facts)
+    print("-------------------------------------------")
+    return facts
+
+
+# -------------------------------------------
+# BACKWARD CHAINING
+# -------------------------------------------
+
+def backward_chaining(goal, rules, base_facts):
+    # If goal is already known
+    if goal in base_facts:
+        return True
+
+    # Try to derive goal from rules
+    for cond, res in rules:
+        if res == goal:
+            for fact in cond:
+                if not backward_chaining(fact, rules, base_facts):
+                    return False
+            return True
+
+    return False  # cannot be derived
+
+
+# -------------------------------------------
+# MAIN PROGRAM (You can change facts/rules here)
+# -------------------------------------------
+
+rules = [
+    ({"a"}, "b"),
+    ({"b"}, "c"),
+    ({"c"}, "d")
+]
+
+facts = {"a"}  # initial known facts
+goal = "d"     # goal to prove
+
+# ----- RUN FORWARD CHAINING -----
+derived_facts = forward_chaining(facts.copy(), rules)
+
+# ----- RUN BACKWARD CHAINING -----
+print("Backward Chaining:")
+if backward_chaining(goal, rules, {"a"}):  # base facts = {"a"}
+    print("Goal can be achieved:", goal)
+else:
+    print("Goal cannot be achieved:", goal)
