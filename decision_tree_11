@@ -1,0 +1,48 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load dataset
+df = pd.read_csv("retail_dataset.csv")
+
+# FIX: Clean hidden BOM characters if they exist (prevents Age error)
+df.columns = df.columns.str.replace('\ufeff', '', regex=False)
+
+# Handle missing values
+df = df.fillna(df.mean(numeric_only=True))
+
+# Convert categorical columns
+df = pd.get_dummies(df, drop_first=True)
+
+# Split X and y
+X = df.drop("Purchase", axis=1)
+y = df["Purchase"]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train Decision Tree
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+# Predictions
+y_pred = clf.predict(X_test)
+
+# Evaluation
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+  csv
+  Age,Gender,Income,BrowsingTime,Purchase
+25,Male,40000,5,0
+30,Female,50000,10,1
+40,Female,60000,2,0
+22,Male,35000,12,1
+35,Female,52000,8,1
+28,Male,45000,3,0
+42,Male,70000,1,0
+31,Female,58000,9,1
