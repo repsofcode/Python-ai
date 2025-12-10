@@ -1,0 +1,104 @@
+import numpy as np
+
+def candidate_elimination(data, target):
+    # S = most specific hypothesis
+    S = data[0].copy()
+
+    # G = most general hypothesis
+    G = [['?' for _ in S]]
+
+    for x, label in zip(data, target):
+        if label == 'yes':
+            for i in range(len(S)):
+                if S[i] != x[i]:
+                    S[i] = '?'
+            # remove overly general hypotheses
+            G = [g for g in G if all(g[i] == '?' or g[i] == x[i] for i in range(len(x)))]
+        else:
+            new_G = []
+            for g in G:
+                for i in range(len(x)):
+                    if g[i] == '?' and S[i] != x[i]:
+                        new_h = g.copy()
+                        new_h[i] = S[i]
+                        new_G.append(new_h)
+            G.extend(new_G)
+
+            # remove duplicates
+            G = [list(t) for t in set(tuple(r) for r in G)]
+
+    return S, G
+
+
+# Example VTU training data (same as textbook)
+data = np.array([
+    ['Sunny','Hot','High','Weak'],
+    ['Sunny','Hot','High','Strong'],
+    ['Rainy','Hot','High','Weak'],
+    ['Sunny','Hot','High','Weak']
+])
+
+target = np.array(['yes','yes','no','yes'])
+
+S, G = candidate_elimination(data, target)
+
+print("Final Specific Hypothesis:", S)
+print("Final General Hypothesis:", G)
+  alter
+import pandas as pd
+import numpy as np
+
+def candidate_elimination(data, target):
+    # S = most specific hypothesis
+    S = data[0].copy()
+
+    # G = most general hypothesis
+    G = [['?' for _ in S]]
+
+    for x, label in zip(data, target):
+        if label == 'yes':
+            for i in range(len(S)):
+                if S[i] != x[i]:
+                    S[i] = '?'
+            # remove overly general hypotheses
+            G = [g for g in G if all(g[i] == '?' or g[i] == x[i] for i in range(len(x)))]
+        else:
+            new_G = []
+            for g in G:
+                for i in range(len(x)):
+                    if g[i] == '?' and S[i] != x[i]:
+                        new_h = g.copy()
+                        new_h[i] = S[i]
+                        new_G.append(new_h)
+            G.extend(new_G)
+
+            # remove duplicates
+            G = [list(t) for t in set(tuple(r) for r in G)]
+
+    return S, G
+
+
+# -------------------------
+# READ FROM CSV
+# -------------------------
+df = pd.read_csv("ce_data.csv")
+
+# Extract features and target
+data = df.iloc[:, :-1].values      # all columns except last
+target = df.iloc[:, -1].values     # last column
+
+# Run CE
+S, G = candidate_elimination(data, target)
+
+print("Final Specific Hypothesis:", S)
+print("Final General Hypothesis:", G)
+
+
+
+  csv
+
+Outlook,Temperature,Humidity,Wind,Target
+Sunny,Hot,High,Weak,yes
+Sunny,Hot,High,Strong,yes
+Rainy,Hot,High,Weak,no
+Sunny,Hot,High,Weak,yes
